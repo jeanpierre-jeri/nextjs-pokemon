@@ -8,7 +8,7 @@ import confetti from 'canvas-confetti'
 import { pokeApi } from '../api'
 import { Layout } from '../../components/layouts'
 import { Pokemon, PokemonListResponse } from '../../interfaces'
-import { capitalize, existsInFavorites, toggleFavorites } from '../../utils'
+import { capitalize, existsInFavorites, getPokemonInfo, toggleFavorites } from '../../utils'
 
 interface PokemonPageProps {
   pokemon: Pokemon
@@ -67,10 +67,30 @@ const PokemonPage: NextPage<PokemonPageProps> = ({ pokemon }) => {
             <Card.Body>
               <Text size={30}>Sprites:</Text>
               <Container direction="row" display="flex" gap={0}>
-                <Image src={pokemon.sprites.front_default} alt={pokemon.name} width={100} height={100} />
-                <Image src={pokemon.sprites.back_default} alt={pokemon.name} width={100} height={100} />
-                <Image src={pokemon.sprites.front_shiny} alt={pokemon.name} width={100} height={100} />
-                <Image src={pokemon.sprites.back_shiny} alt={pokemon.name} width={100} height={100} />
+                <Image
+                  src={pokemon.sprites.front_default}
+                  alt={pokemon.name}
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  src={pokemon.sprites.back_default}
+                  alt={pokemon.name}
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  src={pokemon.sprites.front_shiny}
+                  alt={pokemon.name}
+                  width={100}
+                  height={100}
+                />
+                <Image
+                  src={pokemon.sprites.back_shiny}
+                  alt={pokemon.name}
+                  width={100}
+                  height={100}
+                />
               </Container>
             </Card.Body>
           </Card>
@@ -99,7 +119,8 @@ export const getStaticPaths: GetStaticPaths = async (_ctx) => {
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string }
-  const { data: pokemon } = await pokeApi.get<Pokemon>(`/pokemon/${id}`)
+
+  const pokemon = await getPokemonInfo(id)
 
   return {
     props: {
